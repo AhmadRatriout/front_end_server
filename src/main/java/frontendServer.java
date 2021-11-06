@@ -118,7 +118,7 @@ public class frontendServer {
         	topic = topic.replaceAll(" ", "%20");
         	URL url = new URL("http://192.168.1.233:4567/purchase/" + topic);
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("GET");
+            http.setRequestMethod("POST");
             http.setRequestProperty("Accept", "application/json");
             System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
             BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));

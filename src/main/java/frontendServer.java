@@ -13,7 +13,7 @@ public class frontendServer {
     public static void main(String[] args) {
         BasicConfigurator.configure();
 
-        get("/search/:value", (req, res) ->{
+        get("/search/:value", (req, res) ->{       //here we take the value then send it in the URL to the catalog server
         	String topic = req.params(":value");
         	topic = topic.replaceAll(" ", "%20");
         	URL url = new URL("http://192.168.1.250:4567/search/" + topic);
@@ -21,8 +21,9 @@ public class frontendServer {
             http.setRequestMethod("GET");
             http.setRequestProperty("Accept", "application/json");
 
-            
-            System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
+            // here is the returned response from the catalog server for the search request 
+
+            System.out.println(http.getResponseCode() + " " + http.getResponseMessage()); 
             BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
@@ -32,6 +33,8 @@ public class frontendServer {
             br.close();
             
 // TO MAKE A NEW JSON FILE OR JSON ARRAY OF OBJECTS
+// this JSON File or JSON ARRAY are used for the caching part later
+
             JSONArray booksList= new JSONArray();
             sb.deleteCharAt(0);
             String finalString = sb.toString();
@@ -62,16 +65,18 @@ public class frontendServer {
             return booksList;
         });
         
-        
+        //here is the info request from the front end to the catalog server
+
         get("/info/:value", (req, res) ->{
         	String topic = req.params(":value");
         	topic = topic.replaceAll(" ", "%20");
-        	URL url = new URL("http://192.168.1.250:4567/info/" + topic);
+        	URL url = new URL("http://192.168.1.250:4567/info/" + topic); // here we add the stored value in topic to the url to be sent inside the request 
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
             http.setRequestMethod("GET");
             http.setRequestProperty("Accept", "application/json");
 
-            
+            //here is the response message from the catalog server to the front end server
+
             System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
             BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));
             StringBuilder sb = new StringBuilder();
@@ -82,6 +87,8 @@ public class frontendServer {
             br.close();
             
 // TO MAKE A NEW JSON FILE OR JSON ARRAY OF OBJECTS
+// this JSON File or JSON ARRAY are used for the caching part later
+
             JSONArray booksList= new JSONArray();
             sb.deleteCharAt(0);
             String finalString = sb.toString();
@@ -112,15 +119,18 @@ public class frontendServer {
             return booksList;
         });
         
-        
+        //here is the purchase request from the front end server to the order server
         get("/purchase/:value", (req, res) ->{
         	String topic = req.params(":value");
         	topic = topic.replaceAll(" ", "%20");
-        	URL url = new URL("http://192.168.1.233:4567/purchase/" + topic);
+        	URL url = new URL("http://192.168.1.233:4567/purchase/" + topic); // we add the stored value in the topic to the url that we are going to send with the request 
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("POST");
+            http.setRequestMethod("POST"); 
             http.setRequestProperty("Accept", "application/json");
-            System.out.println(http.getResponseCode() + " " + http.getResponseMessage());
+
+         // here is the response message from the order server to the front end server 
+
+            System.out.println(http.getResponseCode() + " " + http.getResponseMessage()); 
             BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
@@ -128,7 +138,7 @@ public class frontendServer {
                 sb.append(line+"\n");
             }
             br.close();
-        	return sb.toString();
+        	return sb.toString(); 
         });
         
         
